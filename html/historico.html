@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../css/historico.css">
+    <title>Histórico de Pesquisa</title>
+</head>
+
+<body>
+    <div class="sidebar">
+        <nav>
+            <a href="#" class="active">Histórico</a>
+            <a href="chat.html">Chat</a>
+            <a href="ajuda.html">Ajuda</a>
+            <a href="sobre.html">Sobre</a>
+        </nav>
+    </div>
+    <img src="../imagens/2.png" class="logo-inferior-esquerda">
+
+    <main class="main">
+        <div class="search-container">
+            <h1>Histórico</h1>
+            <div class="search-box"></div>
+            <form action="#" method="get">
+                <input type="text" id="searchInput" placeholder="Digite sua pesquisa...">
+                <button onclick="addSearch()">Buscar</button>
+            </form>
+            <ul id="historyList"></ul>
+            <button id="clearBtn" onclick="clearHistory()" style="display:none;">Limpar Histórico</button>
+    </main>
+    </div>
+
+
+    <script src="../javascript/historico.js"></script>
+</body>
+
+</html>
