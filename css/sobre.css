@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    align-items: center;
+}
+
+.main-content {
+    margin-left: 180px; 
+    padding: 20px;
+  }
+
+.logo-inferior-esquerda {
+    position: fixed;  
+    bottom: 10px;      
+    left: 10px;       
+    width: 100px;     
+    height: auto;      
+    z-index: 1000;   
+  }
+
+.sidebar{
+    width: 180px;
+    background-color: #e0e0e0;
+    padding-top: 20px;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px 20px;
+    margin: 6px 10px;
+    text-decoration: none;
+    color: black;
+    border-radius: 8px;
+    font-size: 14px;
+
+    transition: all 0.3s ease;
+  }
+
+  .sidebar a.active {
+    background-color: white;
+    border: 1px solid #ccc;
+  }
+
+  .sidebar a:hover {
+    background-color: #d6d6d6;
+    transform: scale(1.05);   
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
