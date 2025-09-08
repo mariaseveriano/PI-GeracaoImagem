@@ -12,7 +12,7 @@
 
 <body>
     <div class="container">
-        <aside class='sidebar'>
+        <aside class="sidebar">
             <nav>
                 <a href="historico.html">Histórico</a>
                 <a href="#" class="active">Chat</a>
@@ -20,15 +20,41 @@
                 <a href="sobre.html">Sobre</a>
             </nav>
         </aside>
-        <main class="main">
-            <h1>Pictura</h1>
-            <form action="#" method="get">
-                <input type="text" placeholder="Informe o assunto aqui...">
-                <button type="submit">Enviar</button>
-            </form>
-        </main>
         <img src="../imagens/2.png" class="logo-inferior-esquerda">
     </div>
+
+    <main class="main">
+        <h1>Pictura</h1>
+            <div class="form-sections">
+                <section class="form-box">
+                    <h2>Química</h2>
+                    <form action="#" method="post">
+                        <label for="quimica-assunto">Assunto</label>
+                        <input type="text" id="quimica-assunto" name="quimica-assunto"
+                            placeholder="Digite o assunto...">
+
+                        <label for="quimica-info">Informações adicionais</label>
+                        <input type="text" id="quimica-info" name="quimica-info"
+                            placeholder="Digite informações adicionais...">
+
+                        <button type="submit">Enviar</button>
+                    </form>
+                </section>
+                <section class="form-box">
+                    <h2>Física</h2>
+                    <form action="#" method="post">
+                        <label for="fisica-assunto">Assunto</label>
+                        <input type="text" id="fisica-assunto" name="fisica-assunto" placeholder="Digite o assunto...">
+
+                        <label for="fisica-info">Informações adicionais</label>
+                        <input type="text" id="fisica-info" name="fisica-info"
+                            placeholder="Digite informações adicionais...">
+
+                        <button type="submit">Enviar</button>
+                    </form>
+                </section>
+            </div>
+    </main>
 </body>
 
 </html>

@@ -17,10 +17,10 @@ body {
 }
 
 .logo-poliedro {
-    width: 65px;  
+    width: 65px;
     height: auto;
 
-  }
+}
 
 .container {
     width: 420px;
@@ -57,7 +57,7 @@ body {
 }
 
 .input-box input::placeholder {
-    color:  black;
+    color: black;
 }
 
 .input-box i {
