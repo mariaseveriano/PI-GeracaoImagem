@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+    font-family: "Ubuntu", sans-serif;
 }
 
 body {
@@ -12,7 +12,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url('../imagens/imagem.jpeg');
+    background: url('../imagens/imagem.jpg');
     background-position: center;
 }
 
@@ -20,7 +20,7 @@ body {
     width: 420px;
     background-color: #f5f5f5;
     border: 2px solid rgba(255, 255, 255, .2);
-    border-radius: 10px;
+    border-radius: 50px;
     color: black;
     padding: 30px 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, .2);
@@ -85,7 +85,7 @@ body {
     color: #333;
     font-weight: 600;
     box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    margin-top: 10px;
+
 }
 
 .registrar:hover {

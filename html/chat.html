@@ -11,50 +11,61 @@
 </head>
 
 <body>
+
     <div class="container">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
+
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+
             <nav>
-                <a href="historico.html">Histórico</a>
                 <a href="#" class="active">Chat</a>
+                <a href="historico.html">Histórico</a>
                 <a href="ajuda.html">Ajuda</a>
                 <a href="sobre.html">Sobre</a>
             </nav>
+
+            <img src="../imagens/2.png" class="logo-inferior-esquerda">
+            
         </aside>
-        <img src="../imagens/2.png" class="logo-inferior-esquerda">
+        
     </div>
 
     <main class="main">
         <h1>Pictura</h1>
-            <div class="form-sections">
-                <section class="form-box">
-                    <h2>Química</h2>
-                    <form action="#" method="post">
-                        <label for="quimica-assunto">Assunto</label>
-                        <input type="text" id="quimica-assunto" name="quimica-assunto"
-                            placeholder="Digite o assunto...">
+        <div class="form-sections">
+            <section class="form-box">
+                <form action="#" method="post">
 
-                        <label for="quimica-info">Informações adicionais</label>
-                        <input type="text" id="quimica-info" name="quimica-info"
-                            placeholder="Digite informações adicionais...">
+                    <label for="materia">Matéria:</label>
+                    <select id="opcoes-materia" name="opcoes-materia" onchange="atualizarConteudos()">
+                        <option value="">Selecione a matéria...</option>
+                        <option value="quimica">Química</option>
+                        <option value="fisica">Física</option>
+                    </select>
 
-                        <button type="submit">Enviar</button>
-                    </form>
-                </section>
-                <section class="form-box">
-                    <h2>Física</h2>
-                    <form action="#" method="post">
-                        <label for="fisica-assunto">Assunto</label>
-                        <input type="text" id="fisica-assunto" name="fisica-assunto" placeholder="Digite o assunto...">
 
-                        <label for="fisica-info">Informações adicionais</label>
-                        <input type="text" id="fisica-info" name="fisica-info"
-                            placeholder="Digite informações adicionais...">
+                    <label for="conteudo">Conteúdo:</label>
+                    <select id="conteudo">
+                        <option value="">Selecione o conteúdo...</option>
+                    </select>
 
-                        <button type="submit">Enviar</button>
-                    </form>
-                </section>
-            </div>
+                    <label for="estilo">Estilo da Imagem:</label>
+                    <select id="estilo-imagem">
+                        <option value="">Selecione o estilo...</option>
+                    </select>
+
+                </form>
+
+                <button type="submit">Enviar</button>
+
+            </section>
+        </div>
     </main>
+
+    <script src="../javascript/selecao_materia.js"></script>
+    <script src="../javascript/toggle_sidebar.js"></script>
 </body>
 
 </html>
