@@ -18,18 +18,18 @@
             <button class="sidebar-toggle" onclick="toggleSidebar()">
                 <i class='bx bx-chevron-left'></i>
             </button>
-
+            <!-- barra de navegação -->
             <nav>
                 <a href="#" class="active">Chat</a>
                 <a href="historico.html">Histórico</a>
                 <a href="ajuda.html">Ajuda</a>
                 <a href="sobre.html">Sobre</a>
             </nav>
+            <!-- logo poliedro -->
+            <img src="../imagens/3.png" class="logo-inferior-esquerda">
 
-            <img src="../imagens/2.png" class="logo-inferior-esquerda">
-            
         </aside>
-        
+
     </div>
 
     <main class="main">
@@ -37,7 +37,7 @@
         <div class="form-sections">
             <section class="form-box">
                 <form action="#" method="post">
-
+                    <!-- formulários de criação de imagem -->
                     <label for="materia">Matéria:</label>
                     <select id="opcoes-materia" name="opcoes-materia" onchange="atualizarConteudos()">
                         <option value="">Selecione a matéria...</option>
@@ -55,9 +55,12 @@
                     <select id="estilo-imagem">
                         <option value="">Selecione o estilo...</option>
                     </select>
+                    <!-- caixa de texto -->
+                    <label for="Info">Informações Adicionais</label>
+                    <input type="text" id="estilo" name="estilo" placeholder="Adicione Informações..." />
 
                 </form>
-
+                <!-- botão para envio do formulário -->
                 <button type="submit">Enviar</button>
 
             </section>
