@@ -31,9 +31,6 @@ function atualizarConteudos() {
     });
   }
 
-  // -------------------
-  // Preencher ESTILOS
-  // -------------------
   const opcaoPadraoEstilo = document.createElement("option");
   opcaoPadraoEstilo.value = "";
   opcaoPadraoEstilo.textContent = "Selecione o Estilo...";
@@ -47,5 +44,12 @@ function atualizarConteudos() {
       estiloSelect.appendChild(opcao);
     });
   }
+}
+
+function toggleSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  const main = document.querySelector(".main");
+  sidebar.classList.toggle("hidden");
+  main.classList.toggle("full-width");
 }
 

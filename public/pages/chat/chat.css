@@ -12,7 +12,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url('../imagens/background.png');
+    background: url('../../imagens/background.png');
     background-position: center;
     backdrop-filter: blur(2px);
 }
