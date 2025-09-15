@@ -23,11 +23,13 @@
 
         <form>
             <div class="input-box">
-                <input placeholder="Usuário" type="email" required>
+                <input type="email" id="email" name="email" required placeholder="@sistemapoliedro.com.br ou @p4ed.com">
+                <span class="error-message" id="emailError"></span>
                 <i class="bx bxs-user"></i>
             </div>
             <div class="input-box">
                 <input placeholder="Senha" type="password" required>
+                <span class="error-message" id="passwordError"></span>
                 <i class="bx bxs-lock-alt"></i>
             </div>
 

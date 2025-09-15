@@ -52,7 +52,7 @@ body {
 }
 
 .input-box input::placeholder {
-    color: black;
+    color: gray;
 }
 
 .input-box i {
@@ -93,4 +93,9 @@ body {
     border: 2px solid rgba(255, 255, 255, .2);
     color: black;
     transition: 0.5s;
+}
+
+.box {
+    height: 70px;
+    font-size: 16px;
 }
