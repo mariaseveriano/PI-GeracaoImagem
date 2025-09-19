@@ -58,4 +58,4 @@ João Paulo de Lima Martins - 25.00806-1
 
 ***
 
-Agradecimentos especiais ao Prof. Nûncio pelo suporte exercido ao longo do projeto.
+Agradecimentos especiais ao Prof. Núncio pelo suporte exercido ao longo do projeto.
