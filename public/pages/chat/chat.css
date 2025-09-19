@@ -14,7 +14,6 @@ body {
     min-height: 100vh;
     background: url('../../imagens/background.png');
     background-position: center;
-    backdrop-filter: blur(2px);
 }
 
 /* logo poliedro */
