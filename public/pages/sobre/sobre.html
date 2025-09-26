@@ -10,15 +10,25 @@
 </head>
 
 <body>
-    <div class="sidebar">
-        <nav>
-            <a href="../chat/chat.html">Chat</a>
-            <a href="../historico/historico.html">Histórico</a>
-            <a href="../ajuda/ajuda.html">Ajuda</a>
-            <a href="#" class="active">Sobre</a>
-        </nav>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+            <!-- barra de navegação -->
+            <nav>
+                <a href="../chat/chat.html">Chat</a>
+                <a href="../historico/historico.html">Histórico</a>
+                <a href="../ajuda/ajuda.html">Ajuda</a>
+                <a href="#"class="active">Sobre</a>
+            </nav>
+            <!-- logo poliedro -->
+            <img src="../../imagens/logo-black.png" class="logo-inferior-esquerda">
+
+        </aside>
+
     </div>
-    <img src="../../imagens/logo-black.png" class="logo-inferior-esquerda">
 
     <div class="main-content">
         <h1>Sobre o Projeto</h1>
@@ -34,6 +44,8 @@
             <li>Yuri Rezende Suzuki</li>
         </ul>
     </div>
+
+    <script src="sobre.js"></script>
 </body>
 
 </html>

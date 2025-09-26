@@ -5,7 +5,7 @@ const conteudosPorMateria = {
 
 const estilosPorMateria = {
   quimica: ["Molecular", "3D", "Esquemático", "Minimalista"],
-  fisica: ["Mecânica", " Óptica", "Eletricidade", "Termodinâmica"]
+  fisica: ["3D", "Esquemático", "Minimalista"]
 };
 
 function atualizarConteudos() {

@@ -10,30 +10,41 @@
 </head>
 
 <body>
-    <div class="sidebar">
-        <nav>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class='bx bx-chevron-left'></i>
+            </button>
             <!-- barra de navegação -->
-            <a href="../chat/chat.html">Chat</a>
-            <a href="#" class="active">Histórico</a>
-            <a href="../ajuda/ajuda.html">Ajuda</a>
-            <a href="../sobre/sobre.html">Sobre</a>
-        </nav>
+            <nav>
+                <a href="../chat/chat.html">Chat</a>
+                <a href="#" class="active">Histórico</a>
+                <a href="../ajuda/ajuda.html">Ajuda</a>
+                <a href="../sobre/sobre.html">Sobre</a>
+            </nav>
+            <!-- logo poliedro -->
+            <img src="../../imagens/logo-black.png" class="logo-inferior-esquerda">
+
+        </aside>
+
     </div>
-    <!-- logo poliedro -->
-    <img src="../../imagens/logo-black.png" class="logo-inferior-esquerda">
 
     <main class="main">
-        <div class="search-container">
-            <h1>Histórico</h1>
-            <div class="search-box"></div>
-            <form action="#" method="get">
-                <input type="text" id="searchInput" placeholder="Digite sua pesquisa...">
-                <button onclick="addSearch()">Buscar</button>
-            </form>
-            <ul id="historyList"></ul>
-            <button id="clearBtn" onclick="clearHistory()" style="display:none;">Limpar Histórico</button>
+        <section class="form-box">
+            <div class="search-container">
+                <h1>Histórico</h1>
+                <div class="search-box">
+                    <form action="#" method="get">
+                        <input type="text" id="searchInput" placeholder="Digite sua pesquisa...">
+                        <button onclick="addSearch()">Buscar</button>
+                    </form>
+                    <ul id="historyList"></ul>
+                    <button id="clearBtn" onclick="clearHistory()" style="display:none;">Limpar Histórico</button>
+                </div>
+            </div>
+        </section>
     </main>
-    </div>
 
 
     <script src="historico.js"></script>

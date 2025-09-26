@@ -1,64 +1,124 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 * {
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-    align-items: center;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  align-items: center;
 }
 
-.main-content {
-    margin-left: 180px; 
-    padding: 20px;
-  }
+.main-content h1 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  font-family: 'Poppins', sans-serif;
+  text-shadow: 2px 2px 4px #646464;
+  color: rgb(0, 0, 0)
+}
 
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: url('../../imagens/fundo-sobre.png');
-    background-position: center;
-  }
+.main form {
+  display: flex;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('../../imagens/fundo-sobre.png');
+  background-position: center;
+}
 
 .logo-inferior-esquerda {
-    position: fixed;  
-    bottom: 10px;      
-    left: 10px;       
-    width: 100px;     
-    height: auto;      
-    z-index: 1000;   
-  }
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 100px;
+  height: auto;
+  z-index: 1000;
+}
 
-.sidebar{
-    width: 180px;
-    background-color: #e0e0e0;
-    padding-top: 20px;
-    position: fixed;
-    height: 100%;
-    top: 0;
-    left: 0;
-    padding-top: 20px;
+.sidebar {
+  width: 180px;
+  background-color: #e0e0e0;
+  padding-top: 20px;
+  position: fixed;
+  height: 100%;
+  top: 0;
+  left: 0;
+  padding-top: 20px;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
 }
 
 .sidebar a {
-    display: block;
-    padding: 12px 20px;
-    margin: 6px 10px;
-    text-decoration: none;
-    color: black;
-    border-radius: 50px;
-    font-size: 14px;
+  display: block;
+  padding: 12px 20px;
+  margin: 6px 10px;
+  text-decoration: none;
+  color: black;
+  border-radius: 50px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
 
-    transition: all 0.3s ease;
-  }
+.sidebar a.active {
+  background-color: white;
+  border: 1px solid #ccc;
+}
 
-  .sidebar a.active {
-    background-color: white;
-    border: 1px solid #ccc;
-  }
+.sidebar a:hover {
+  background-color: #d6d6d6;
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
 
-  .sidebar a:hover {
-    background-color: #d6d6d6;
-    transform: scale(1.05);   
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  }
+/* setinha */
+.sidebar-toggle {
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 150px;
+  background: #e0e0e0;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+  padding: 0;
+  clip-path: polygon(0 0, 0 100%, 100% 80%, 100% 20%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.sidebar-toggle i {
+  color: black;
+  font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+.sidebar.hidden .sidebar-toggle i {
+  transform: rotate(180deg);
+}
+
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+.main.full-width {
+  margin-left: 0;
+}
+
+.main-content {
+  background-color: rgba(224, 224, 224, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  padding: 40px;
+  border-radius: 130px;
+  width: 1000px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
+}

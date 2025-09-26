@@ -10,23 +10,34 @@
 </head>
 
 <body>
-    <div class="sidebar">
-        <nav>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class='bx bx-chevron-left'></i>
+            </button>
             <!-- barra de navegação -->
-            <a href="../chat/chat.html">Chat</a>
-            <a href="../historico/historico.html">Histórico</a>
-            <a href="#" class="active">Ajuda</a>
-            <a href="../sobre/sobre.html">Sobre</a>
-        </nav>
+            <nav>
+                <a href="../chat/chat.html">Chat</a>
+                <a href="../historico/historico.html">Histórico</a>
+                <a href="#" class="active">Ajuda</a>
+                <a href="../sobre/sobre.html">Sobre</a>
+            </nav>
+            <!-- logo poliedro -->
+            <img src="../../imagens/logo-black.png" class="logo-inferior-esquerda">
+
+        </aside>
+
     </div>
-    <!-- logo poliedro -->
-    <img src="../../imagens/logo-black.png" class="logo-inferior-esquerda">
 
     <div class="main-content">
         <h1>Como fazer uma imagem?</h1>
-        <p>Faça uma descrição detalhada de como você deseja a imagem. Quanto mais específico for, mais fiel ela será ao que você imaginou.</p>
+        <p>Faça uma descrição detalhada de como você deseja a imagem. Quanto mais específico for, mais fiel ela será ao
+            que você imaginou.</p>
         <p>Quando terminar, clique em "enviar" e sua foto estará pronta.</p>
     </div>
+
+    <script src="ajuda.js"></script>
 </body>
 
 </html>
