@@ -1,134 +1,72 @@
 const express = require('express');
-const cors = require('cors');
-const { conectarDB, desconectarDB } = require('./server/config/db');
-const userRoutes = require('./server/routes/userRoutes');
-require('dotenv').config();
+const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+app.use(bodyParser.json());
 
-// Middlewares
-app.use(cors({
-  origin: '*', // Em produção, especifique os domínios permitidos
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// "Banco de dados" simples em memória
+const usuarios = [];
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Chave secreta para JWT
+const JWT_SECRET = 'sua_chave_secreta_super_segura';
 
-// Servir arquivos estáticos (HTML, CSS, JS)
-app.use(express.static('public'));
+// Endpoint de registro
+app.post('/api/auth/register', async (req, res) => {
+    const { nome, email, senha } = req.body;
 
-// Middleware de log
-app.use((req, res, next) => {
-  const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] ${req.method} ${req.path}`);
-  next();
-});
-
-// Rotas da API
-app.use('/api/users', userRoutes);
-
-// Rota principal
-app.get('/', (req, res) => {
-  res.json({
-    sucesso: true,
-    mensagem: 'API de Gerenciamento de Usuários',
-    versao: '1.0.0',
-    endpoints: {
-      users: '/api/users',
-      health: '/api/health',
-      stats: '/api/users/stats'
+    if (!nome || !email || !senha) {
+        return res.status(400).json({ error: 'Campos obrigatórios faltando' });
     }
-  });
+
+    const existe = usuarios.find(u => u.email === email);
+    if (existe) {
+        return res.status(400).json({ error: 'Usuário já existe' });
+    }
+
+    const senhaHash = await bcrypt.hash(senha, 10);
+    const usuario = { id: usuarios.length + 1, nome, email, senha: senhaHash };
+    usuarios.push(usuario);
+
+    const token = jwt.sign({ id: usuario.id, email: usuario.email }, JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
 });
 
-// Rota de health check
-app.get('/api/health', (req, res) => {
-  res.json({
-    sucesso: true,
-    mensagem: 'API funcionando normalmente',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    database: 'MongoDB Atlas (Mongoose)',
-    node: process.version
-  });
+// Endpoint de login
+app.post('/api/auth/login', async (req, res) => {
+    const { email, senha } = req.body;
+
+    if (!email || !senha) {
+        return res.status(400).json({ error: 'Campos obrigatórios faltando' });
+    }
+
+    const usuario = usuarios.find(u => u.email === email);
+    if (!usuario) {
+        return res.status(400).json({ error: 'Erro ao efetuar login' });
+    }
+
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
+    if (!senhaValida) {
+        return res.status(400).json({ error: 'Erro ao efetuar login' });
+    }
+
+    const token = jwt.sign({ id: usuario.id, email: usuario.email }, JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
 });
 
-// Rota 404 - Deve vir antes do middleware de erro
-app.use((req, res) => {
-  res.status(404).json({
-    sucesso: false,
-    mensagem: 'Rota não encontrada',
-    path: req.path
-  });
+// Exemplo de rota protegida
+app.get('/api/protected', (req, res) => {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) return res.status(401).json({ error: 'Token não fornecido' });
+
+    const token = authHeader.split(' ')[1];
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        res.json({ message: `Olá ${decoded.email}, você acessou rota protegida!` });
+    } catch {
+        res.status(401).json({ error: 'Token inválido' });
+    }
 });
 
-// Middleware de erro global
-app.use((err, req, res, next) => {
-  console.error('❌ Erro capturado:', err);
-  
-  res.status(err.status || 500).json({
-    sucesso: false,
-    mensagem: 'Erro interno do servidor',
-    erro: process.env.NODE_ENV === 'development' ? err.message : undefined,
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-  });
-});
-
-// Função para iniciar o servidor
-const iniciarServidor = async () => {
-  try {
-    // Conectar ao banco de dados
-    await conectarDB();
-
-    // Iniciar servidor
-    app.listen(PORT, () => {
-      console.log('\n' + '='.repeat(50));
-      console.log(`🚀 Servidor rodando na porta ${PORT}`);
-      console.log(`📱 URL: http://localhost:${PORT}`);
-      console.log(`🔗 API Users: http://localhost:${PORT}/api/users`);
-      console.log(`💚 Health: http://localhost:${PORT}/api/health`);
-      console.log(`📊 Stats: http://localhost:${PORT}/api/users/stats`);
-      console.log(`🔍 Buscar: http://localhost:${PORT}/api/users/buscar?q=termo`);
-      console.log(`⚙️  Ambiente: ${process.env.NODE_ENV || 'development'}`);
-      console.log('='.repeat(50) + '\n');
-    });
-  } catch (error) {
-    console.error('❌ Erro ao iniciar servidor:', error);
-    process.exit(1);
-  }
-};
-
-// Tratamento de encerramento gracioso
-const encerrarGraciosamente = async (sinal) => {
-  console.log(`\n⚠️  Sinal ${sinal} recebido. Encerrando servidor...`);
-  
-  try {
-    await desconectarDB();
-    console.log('✅ Servidor encerrado com sucesso');
-    process.exit(0);
-  } catch (error) {
-    console.error('❌ Erro ao encerrar:', error);
-    process.exit(1);
-  }
-};
-
-process.on('SIGINT', () => encerrarGraciosamente('SIGINT'));
-process.on('SIGTERM', () => encerrarGraciosamente('SIGTERM'));
-
-// Tratamento de erros não capturados
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('❌ Unhandled Rejection:', reason);
-});
-
-process.on('uncaughtException', (error) => {
-  console.error('❌ Uncaught Exception:', error);
-  process.exit(1);
-});
-
-// Iniciar servidor
-iniciarServidor();
-
-module.exports = app;
+app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
