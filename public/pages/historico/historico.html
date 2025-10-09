@@ -5,14 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Histórico de Pesquisa</title>
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Boxicons -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-
-    <!-- Seu CSS (se precisar) -->
     <link rel="stylesheet" href="historico.css" />
 </head>
 
@@ -46,33 +40,33 @@
                 </div>
             </div>
 
-            <div class="row justify-content-center mt-4">
-                <div class="col-12 col-md-10 col-lg-8">
-                    <section class="form-box">
-                        <form id="picturaForm">
-                            <div class="search-container">
-                                <h1>Histórico</h1>
-                                <div class="search-box">
 
-                                    <form class="input-group mb-3" onsubmit="event.preventDefault(); addSearch();">
-                                        <input type="text" id="searchInput" class="form-control"
-                                            placeholder="Digite sua pesquisa..." />
-                                        <button type="submit" class="btn-enviar">Buscar</button>
-                                    </form>
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 col-md-4 col-lg-16">
+                <section class="form-box">
+                    <form id="picturaForm">
+                        <div class="search-container">
+                            <h1>Histórico</h1>
+                            <div class="search-box">
 
-                                    <ul id="historyList" class="list-group mb-3"></ul>
+                                <form class="input-group mb-3" onsubmit="event.preventDefault(); addSearch();">
+                                    <input type="text" id="searchInput" class="form-control"
+                                        placeholder="Digite sua pesquisa..." />
+                                    <button type="submit" class="btn-enviar">Buscar</button>
+                                </form>
 
-                                    <button id="clearBtn" class="btn btn-danger" onclick="clearHistory()"
-                                        style="display:none;">
-                                        Limpar Histórico
-                                    </button>
-                                </div>
+                                <ul id="historyList" class="list-group mb-3"></ul>
+
+                                <button id="clearBtn" class="btn btn-danger" onclick="clearHistory()">
+                                    Limpar Histórico
+                                </button>
                             </div>
-                        </form>
-                    </section>
-                </div>
+                        </div>
+                    </form>
+                </section>
             </div>
         </div>
+
 
         <!-- Botão Menu Mobile -->
         <button class="menu-mobile-btn" onclick="toggleMenuMobile()">
