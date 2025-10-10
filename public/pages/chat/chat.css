@@ -133,8 +133,8 @@ h1 {
 
 /* Main Content */
 .main-content {
-    margin-left: 200px;
-    min-height: 100vh;
+    left: 200px;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
