@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="sobre.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Pictura</title>
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+            <!-- barra de navegação -->
+            <nav>
+                <a href="../chat/chat.html">Chat</a>
+                <a href="../historico/historico.html">Histórico</a>
+                <a href="../ajuda/ajuda.html">Ajuda</a>
+                <a href="#" class="active">Sobre</a>
+            </nav>
+            <!-- logo poliedro -->
+            <img src="../../imagens/logo-black.png" class="logo-inferior-esquerda">
+        </aside>
+    </div>
+
+    <main class="main-content" id="mainContent">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 text-center">
+                    <div class="logout-container">
+                        <button class="logout-btn" onclick="logout()">
+                            <i class='bx bx-log-out'></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-4">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <section class="form-box">
+                        <h1>Sobre o Projeto</h1>
+                        <p>Este é um projeto realizado por alunos do segundo semestre<br>de Ciência da Computação do
+                            Instituto Mauá de Tecnologia.<br>O
+                            intuito desse trabalho é auxiliar professores nas aulas,<br> usando a Inteligência
+                            Artificial para promover a educação.<br>Esta proposta foi realizada pelos alunos:</p>
+                        <ul>
+                            <li>Bianca Borges Santana</li>
+                            <li>Caio Von Atzingen Pfeilsticker</li>
+                            <li>João Paulo de Lima Martins</li>
+                            <li>Letícia Brito dos Santos</li>
+                            <li>Maria Clara Gatti dos Santos Severiano</li>
+                            <li>Yuri Rezende Suzuki</li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- Botão Menu Mobile -->
+        <button class="menu-mobile-btn" onclick="toggleMenuMobile()">
+            <i class='bx bx-menu'></i>
+        </button>
+
+        <!-- Overlay Menu Mobile -->
+        <div class="menu-mobile-overlay" id="menuMobileOverlay" onclick="toggleMenuMobile()"></div>
+
+        <!-- Menu Mobile -->
+        <div class="menu-mobile" id="menuMobile">
+            <div class="menu-mobile-header">
+                <h2>Menu</h2>
+                <button class="menu-mobile-close" onclick="toggleMenuMobile()">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <nav class="menu-mobile-nav">
+                <a href="../chat/chat.html" class="menu-mobile-item">
+                    <i class='bx bx-message-square-dots'></i>
+                    <span>Chat</span>
+                </a>
+                <a href="../historico/historico.html" class="menu-mobile-item">
+                    <i class='bx bx-time-five'></i>
+                    <span>Histórico</span>
+                </a>
+                <a href="../ajuda/ajuda.html" class="menu-mobile-item">
+                    <i class='bx bx-info-circle'></i>
+                    <span>Ajuda</span>
+                </a>
+                <a href="#" class="menu-mobile-item">
+                    <i class='bx bx-help-circle'></i>
+                    <span>Sobre</span>
+                </a>
+            </nav>
+            <div class="menu-mobile-footer">
+                <p>Pictura © 2025</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="sobre.js"></script>
+</body>
+
+</html>

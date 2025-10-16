@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="login.css ">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    <title>Pictura</title>
+
+</head>
+
+<body>
+    <main class="container">
+
+        <div class="logo-title">
+            <img src="../../imagens/logo-black.png" class="logo-poliedro">
+            <h1>Pictura</h1>
+        </div>
+
+
+        <form>
+            <div class="input-box">
+                <input type="email" id="email" name="email" required placeholder="@sistemapoliedro.com.br ou @p4ed.com">
+                <span class="error-message" id="emailError"></span>
+                <i class="bx bxs-user"></i>
+            </div>
+            <div class="input-box" style="position:relative;">
+                <input placeholder="Senha" type="password" required id="senha">
+                <span class="error-message" id="passwordError"></span>
+                <button type="button" id="toggleSenha" style="background:none;border:none;cursor:pointer;font-size:18px;position:absolute;right:10px;top:50%;transform:translateY(-50%);">👁️</button>
+            </div>
+
+            <div class="remember-forgot">
+                <label>
+                    <input type="checkbox">
+                    Lembrar senha
+                </label>
+                <a href="#">Esqueci a senha</a>
+            </div>
+
+            <button type="submit" class="login">Login</button>
+
+            <div class="register-link">
+                <p>Não tem uma conta? <a href="../cadastro/cadastro.html">Cadastre-se</a></p>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const senhaInput = document.getElementById('senha');
+            const toggleSenha = document.getElementById('toggleSenha');
+            toggleSenha.addEventListener('click', function () {
+                if (senhaInput.type === 'password') {
+                    senhaInput.type = 'text';
+                    toggleSenha.textContent = '🙈';
+                } else {
+                    senhaInput.type = 'password';
+                    toggleSenha.textContent = '👁️';
+                }
+            });
+            document.querySelector('form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const senha = senhaInput.value;
+                if (!email || !senha) {
+                    alert('Preencha todos os campos!');
+                    return;
+                }
+                try {
+                    const response = await fetch('http://localhost:3000/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, senha })
+                    });
+                    const data = await response.json();
+                    if (data.token) {
+                        alert('Login realizado com sucesso!');
+                        window.location.href = '../chat/chat.html';
+                    } else {
+                        alert(data.error || 'Erro ao efetuar login');
+                    }
+                } catch (err) {
+                    alert('Erro ao conectar com o servidor');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

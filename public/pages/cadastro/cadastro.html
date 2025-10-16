@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="cadastro.css">
+    <title>Pictura</title>
+
+</head>
+
+<body>
+    <main class="container">
+        <h1>Registro</h1>
+        <form>
+            <div class="input-box">
+                <input placeholder="Nome" type="text" required>
+                <i class="bx bxs-user"></i>
+            </div>
+            <div class="input-box">
+                <input placeholder="E-mail " type="email" required>
+                <i class="bx bxs-user"></i>
+            </div>
+            <div class="input-box">
+                <input placeholder="Senha" type="password" required id="senha">
+                <i class="bx bxs-lock-alt"></i>
+            </div>
+            <div class="input-box">
+                <input placeholder="Confirmar Senha" type="password" required id="confirmarSenha">
+                <i class="bx bxs-lock-alt"></i>
+            </div>
+
+            <div class="box">
+                <label>
+                    <input type="radio" name="tipo" value="professor">
+                    Professor
+                </label>
+                <br>
+                <label>
+                    <input type="radio" name="tipo" value="aluno">
+                    Aluno
+                </label>
+            </div>
+            </div>
+
+            <button type="submit" class="registrar">Registrar</button>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelector('form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const nome = document.querySelector('input[placeholder="Nome"]').value;
+                const email = document.querySelector('input[type="email"]').value;
+                const senha = document.getElementById('senha').value;
+                const confirmarSenha = document.getElementById('confirmarSenha').value;
+                const tipo = document.querySelector('input[name="tipo"]:checked')?.value;
+                if (!tipo) {
+                    alert('Selecione se você é Professor ou Aluno!');
+                    return;
+                }
+                if (senha !== confirmarSenha) {
+                    alert('As senhas não coincidem!');
+                    return;
+                }
+                console.log('Dados enviados:', { nome, email, senha, tipo });
+                try {
+                    const response = await fetch('http://localhost:3000/api/auth/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nome, email, senha, tipo })
+                    });
+                    const data = await response.json();
+                    alert(data.token ? 'Cadastro realizado com sucesso!' : (data.error || 'Erro ao cadastrar'));
+                    if (data.token) {
+                        window.location.href = '../login/login.html';
+                    }
+                } catch (err) {
+                    alert('Erro ao conectar com o servidor');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
