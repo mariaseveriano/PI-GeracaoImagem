@@ -26,7 +26,7 @@ const conectarDB = async () => {
       console.log('⚠️  Desconectado do MongoDB');
     });
 
-    mongoose.connection.on('reconnected', () => {
+    mongoose.connection.on('reconnected', () => { 
       console.log('✅ Reconectado ao MongoDB');
     });
 

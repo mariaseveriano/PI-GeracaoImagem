@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
-// Schema do Usuário
 const userSchema = new mongoose.Schema(
   {
     nome: {
@@ -21,7 +19,16 @@ const userSchema = new mongoose.Schema(
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         'Por favor, forneça um email válido'
       ]
-      // Removido index: true para evitar duplicidade
+    },
+    senha: {
+      type: String,
+      required: [true, 'Senha é obrigatória'],
+      minlength: [6, 'Senha deve ter no mínimo 6 caracteres']
+    },
+    tipo: {
+      type: String,
+      enum: ['aluno', 'professor'],
+      required: true
     },
     idade: {
       type: Number,
@@ -35,60 +42,24 @@ const userSchema = new mongoose.Schema(
     ativo: {
       type: Boolean,
       default: true
-    },
-    senha: {
-      type: String,
-      required: [true, 'Senha é obrigatória'],
-      minlength: [6, 'Senha deve ter no mínimo 6 caracteres']
     }
   },
   {
-    timestamps: true, // Cria automaticamente createdAt e updatedAt
+    timestamps: true,
     collection: 'users'
   }
 );
 
-// Índices para melhor performance
+// Índices
 userSchema.index({ email: 1 });
 userSchema.index({ nome: 1 });
-userSchema.index({ createdAt: -1 });
 
-// Método para formatar o objeto antes de enviar como JSON
-userSchema.methods.toJSON = function() {
+// NÃO criptografar aqui - deixa o controller fazer
+userSchema.methods.toJSON = function () {
   const user = this.toObject();
+  delete user.senha; // Remove senha do JSON
   return user;
 };
-
-// Método estático para buscar usuários ativos
-userSchema.statics.buscarAtivos = function() {
-  return this.find({ ativo: true }).sort({ createdAt: -1 });
-};
-
-// Middleware pre-save para logs (opcional)
-userSchema.pre('save', function(next) {
-  if (this.isNew) {
-    console.log(`📝 Novo usuário sendo criado: ${this.email}`);
-  }
-  next();
-});
-
-// Middleware post-save (opcional)
-userSchema.post('save', function(doc) {
-  console.log(`✅ Usuário salvo: ${doc.email}`);
-});
-
-// Middleware para criptografar a senha antes de salvar
-userSchema.pre('save', async function(next) {
-  if (this.isModified('senha')) {
-    try {
-      const salt = await bcrypt.genSalt(10);
-      this.senha = await bcrypt.hash(this.senha, salt);
-    } catch (err) {
-      return next(err);
-    }
-  }
-  next();
-});
 
 const Users = mongoose.model('User', userSchema);
 
