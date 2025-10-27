@@ -125,11 +125,106 @@
         </div>
     </main>
 
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-container">
+            <!-- Header -->
+            <div class="popup-header">
+                <h2>Imagem Gerada</h2>
+                <button class="popup-close" onclick="closePopup()">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+
+            <!-- Conteúdo Principal -->
+            <div class="popup-main">
+                <!-- Coluna da Imagem -->
+                <div class="image-column">
+                    <!-- Loading -->
+                    <div class="loading-container" id="loadingContainer">
+                        <div class="loading-spinner"></div>
+                        <p class="loading-text">Gerando sua imagem...</p>
+                    </div>
+
+                    <!-- Resultado da Imagem -->
+                    <div class="image-result-container" id="imageResultContainer">
+                        <div class="image-wrapper">
+                            <img src="" alt="Imagem Gerada" class="generated-image" id="generatedImage">
+                        </div>
+
+                        <div class="image-info">
+                            <div class="info-item">
+                                <i class='bx bx-book'></i>
+                                <span><strong>Matéria:</strong> <span id="infoMateria">-</span></span>
+                            </div>
+                            <div class="info-item">
+                                <i class='bx bx-file'></i>
+                                <span><strong>Conteúdo:</strong> <span id="infoConteudo">-</span></span>
+                            </div>
+                            <div class="info-item">
+                                <i class='bx bx-palette'></i>
+                                <span><strong>Estilo:</strong> <span id="infoEstilo">-</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna do Chat -->
+                <div class="chat-column">
+                    <div class="chat-header">
+                        <h3>💬 Refinar Imagem</h3>
+                    </div>
+
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message">
+                            <div class="chat-avatar">
+                                <i class='bx bx-bot'></i>
+                            </div>
+                            <div class="chat-bubble">
+                                Olá! Gostaria de adicionar ou modificar algo na imagem? Posso ajudar a refinar detalhes,
+                                mudar cores, adicionar elementos ou ajustar o estilo!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <div class="chat-input-container">
+                            <textarea class="chat-input" id="chatInput"
+                                placeholder="Ex: Adicionar mais detalhes na estrutura molecular..." rows="1"></textarea>
+                            <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()">
+                                <i class='bx bx-send'></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="action-buttons">
+                <button class="action-btn btn-download" onclick="downloadImage()">
+                    <i class='bx bx-download'></i>
+                    <span>Baixar</span>
+                </button>
+                <button class="action-btn btn-share" onclick="shareImage()">
+                    <i class='bx bx-share-alt'></i>
+                    <span>Compartilhar</span>
+                </button>
+                <button class="action-btn btn-new" onclick="newGeneration()">
+                    <i class='bx bx-plus-circle'></i>
+                    <span>Nova Geração</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Sidebar + Form JS -->
     <script src="chat.js"></script>
+
+    <!-- Config JS -->
+    <script src="config.js"></script>
+    
 </body>
 
 </html>
