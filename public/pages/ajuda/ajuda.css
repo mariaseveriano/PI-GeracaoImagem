@@ -336,12 +336,12 @@ body {
   }
 
   .main-content h1 {
-    font-size: 3rem;
+    font-size: 4rem;
   }
 
   .form-box {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 80% !important;
+    max-width: 80% !important;
     padding: 30px 20px;
     margin: 0 auto;
   }
@@ -357,7 +357,7 @@ body {
 
 @media (max-width: 576px) {
   .main-content h1 {
-    font-size: 3rem;
+    font-size: 4rem;
   }
 
   .form-box {

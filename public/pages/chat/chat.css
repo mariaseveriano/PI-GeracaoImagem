@@ -846,8 +846,7 @@ h1 {
     }
 
     .form-box {
-        width: 100% !important;
-        max-width: 100% !important;
+        max-width: 80% !important;
         padding: 30px 20px;
         margin: 0 auto;
     }
@@ -1028,11 +1027,11 @@ h1 {
 
 @media (max-width: 576px) {
     .main-content h1 {
-        font-size: 3rem;
+        font-size: 4rem;
     }
 
     .form-box {
-        width: 100% !important;
+        max-width: 80% !important;
         padding: 25px 16px;
         border-radius: 50px;
     }

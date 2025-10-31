@@ -415,7 +415,7 @@ body {
 
 @media (max-width: 576px) {
     .main h1 {
-        font-size: 2.5rem;
+        font-size: 4rem;
     }
 
     .form-box {
