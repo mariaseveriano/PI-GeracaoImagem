@@ -11,13 +11,13 @@ const app = express();
 const PORT = 3000;
 
 // Middlewares
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
 
-// ========================================
+
 // CONEXÃO ÚNICA COM MONGODB
-// ========================================
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
         console.log('✅ Conectado ao MongoDB Atlas');
@@ -29,9 +29,7 @@ mongoose.connect(process.env.MONGODB_URI)
         process.exit(1);
     });
 
-// ========================================
 // ENDPOINT DE REGISTRO
-// ========================================
 app.post('/api/auth/register', async (req, res) => {
     try {
         const { nome, email, senha, tipo } = req.body;
@@ -100,9 +98,7 @@ app.post('/api/auth/register', async (req, res) => {
     }
 });
 
-// ========================================
 // ENDPOINT DE LOGIN
-// ========================================
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { email, senha } = req.body;
@@ -167,9 +163,7 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-// ========================================
 // ROTA PROTEGIDA (EXEMPLO)
-// ========================================
 app.get('/api/protected', (req, res) => {
     const authHeader = req.headers['authorization'];
 
@@ -194,16 +188,26 @@ app.get('/api/protected', (req, res) => {
     }
 });
 
-// ========================================
 // ROTAS DE USUÁRIOS (CRUD)
-// ========================================
 const userRoutes = require('./server/routes/userRoutes');
 app.use('/api/users', userRoutes);
 
-// ========================================
+// ROTAS DE HISTÓRICO
+const historyRoutes = require('./server/routes/historyRoutes');
+app.use('/api/history', historyRoutes);
+
 // INICIAR SERVIDOR
-// ========================================
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
     console.log(`📍 http://localhost:${PORT}`);
+    console.log('-------------');
+    console.log('📋 Rotas disponíveis:');
+    console.log('   POST   /api/auth/register');
+    console.log('   POST   /api/auth/login');
+    console.log('   GET    /api/history');
+    console.log('   POST   /api/history');
+    console.log('   GET    /api/history/:id');
+    console.log('   DELETE /api/history/:id');
+    console.log('   DELETE /api/history');
+    console.log('-------------');
 });

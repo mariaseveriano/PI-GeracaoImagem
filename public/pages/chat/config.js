@@ -75,6 +75,44 @@ function criarPrompt(materia, conteudo, estilo, infoAdicional) {
     return prompt;
 }
 
+// Converter Blob para Base64
+async function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+}
+
+// Salvar no histórico do backend
+async function salvarNoHistorico(data) {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.warn('⚠️ Token não encontrado, não é possível salvar no histórico');
+            return;
+        }
+
+        const response = await fetch('http://localhost:3000/api/history', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            console.log('✅ Salvo no histórico do servidor');
+        } else {
+            console.warn('⚠️ Erro ao salvar no histórico:', await response.text());
+        }
+    } catch (error) {
+        console.warn('⚠️ Erro ao salvar no histórico:', error);
+    }
+}
+
 
 //  GERAR IMAGEM 
 
@@ -128,9 +166,23 @@ async function gerarImagemAPI(materia, conteudo, estilo, infoAdicional) {
         console.log('🎨 Processando imagem...');
         const blob = await response.blob();
         const imageUrl = URL.createObjectURL(blob);
+        const imageBase64 = await blobToBase64(blob);
 
         const duration = Date.now() - startTime;
         console.log(`✅ Imagem gerada com sucesso em ${(duration / 1000).toFixed(2)}s!`);
+
+        // Salvar no histórico do servidor
+        await salvarNoHistorico({
+            materia,
+            conteudo,
+            estilo,
+            infoAdicional: infoAdicional || '',
+            prompt,
+            imageUrl: imageUrl,
+            imageData: imageBase64,
+            status: 'success',
+            duration
+        });
 
         // 6. Registrar no log
         await logGeneration({
@@ -149,6 +201,20 @@ async function gerarImagemAPI(materia, conteudo, estilo, infoAdicional) {
         const duration = Date.now() - startTime;
         console.error('💥 Erro completo:', error);
 
+        // Salvar erro no histórico
+        await salvarNoHistorico({
+            materia,
+            conteudo,
+            estilo,
+            infoAdicional: infoAdicional || '',
+            prompt: criarPrompt(materia, conteudo, estilo, infoAdicional),
+            imageUrl: '',
+            imageData: '',
+            status: 'error',
+            errorMessage: error.message,
+            duration
+        });
+
         // Registrar erro no log
         await logGeneration({
             materia,
@@ -163,9 +229,7 @@ async function gerarImagemAPI(materia, conteudo, estilo, infoAdicional) {
     }
 }
 
-// ============================================
-// 📊 SISTEMA DE LOGS PERSISTENTE
-// ============================================
+// SISTEMA DE LOGS PERSISTENTE
 
 async function logGeneration(data) {
     try {
@@ -246,11 +310,13 @@ document.addEventListener('DOMContentLoaded', function () {
             // Abrir popup com loading
             if (typeof openPopup === 'function') {
                 openPopup('', materia, conteudo, estilo);
+            } else {
+                console.error('❌ Função openPopup não encontrada!');
+                return;
             }
 
-            console.log('🚀 Iniciando geração...');
-
             // Gerar imagem
+            console.log('🚀 Iniciando geração...');
             const imageUrl = await gerarImagemAPI(materia, conteudo, estilo, infoAdicional);
             console.log('✅ Imagem gerada:', imageUrl);
 

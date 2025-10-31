@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Histórico de Pesquisa</title>
+    <title>Histórico - Pictura</title>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="historico.css" />
 </head>
@@ -28,44 +28,28 @@
 
     <!-- Conteúdo principal -->
     <main class="main" id="main">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 text-center">
-                    <div class="logout-container">
-                        <button class="logout-btn" onclick="logout()">
-                            <i class='bx bx-log-out'></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-
-        <div class="row justify-content-center mt-4">
-            <div class="col-12 col-md-4 col-lg-16">
-                <section class="form-box">
-                    <form id="picturaForm">
-                        <div class="search-container">
-                            <h1>Histórico</h1>
-                            <div class="search-box">
-
-                                <form class="input-group mb-3" onsubmit="event.preventDefault(); addSearch();">
-                                    <input type="text" id="searchInput" class="form-control"
-                                        placeholder="Digite sua pesquisa..." />
-                                    <button type="submit" class="btn-enviar">Buscar</button>
-                                </form>
-
-                                <ul id="historyList" class="list-group mb-3"></ul>
-
-                                <button id="clearBtn" class="btn btn-danger" onclick="clearHistory()">
-                                    Limpar Histórico
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </section>
-            </div>
+        <div class="logout-container">
+            <button class="logout-btn" onclick="logout()">
+                <i class='bx bx-log-out'></i>
+            </button>
         </div>
 
+        <h1>📸 Histórico de Imagens</h1>
+
+        <!-- Controles -->
+        <div class="controls-container">
+            <button id="clearBtn" class="btn-enviar" onclick="clearHistory()">
+                <i class='bx bx-trash'></i> Limpar Histórico
+            </button>
+        </div>
+
+        <!-- Grid de Imagens -->
+        <div id="historyList">
+            <!-- Cards serão inseridos aqui pelo JavaScript -->
+        </div>
+
+        <!-- Paginação -->
+        <div id="pagination"></div>
 
         <!-- Botão Menu Mobile -->
         <button class="menu-mobile-btn" onclick="toggleMenuMobile()">
@@ -106,9 +90,6 @@
             </div>
         </div>
     </main>
-
-    <!-- Bootstrap JS Bundle (com Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="historico.js"></script>
 </body>
