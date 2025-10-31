@@ -137,25 +137,52 @@ function openPopup(imageUrl, materia, conteudo, estilo) {
   loadingContainer.style.display = 'flex';
   imageResultContainer.classList.remove('active');
 
-  // Simular carregamento da imagem
-  setTimeout(() => {
+  // Se imageUrl está vazio, significa que ainda estamos gerando
+  if (!imageUrl) {
+    return;
+  }
+
+  // Se já temos a URL, mostrar a imagem
+  generatedImage.src = imageUrl;
+
+  // Quando a imagem carregar, esconder loading e mostrar resultado
+  generatedImage.onload = () => {
+    loadingContainer.style.display = 'none';
+    imageResultContainer.classList.add('active');
+  };
+
+  // Se houver erro ao carregar
+  generatedImage.onerror = () => {
+    loadingContainer.innerHTML = `
+      <i class='bx bx-error' style='font-size: 60px; color: #ff4d4d;'></i>
+      <p class="loading-text" style="color: #ff4d4d;">Erro ao carregar a imagem</p>
+      <button class="btn-enviar" onclick="closePopup()" style="margin-top: 20px;">Fechar</button>
+    `;
+  };
+}
+
+// Função para atualizar a imagem no popup (chamada após geração)
+function updatePopupImage(imageUrl) {
+  const generatedImage = document.getElementById('generatedImage');
+  const loadingContainer = document.getElementById('loadingContainer');
+  const imageResultContainer = document.getElementById('imageResultContainer');
+
+  if (generatedImage && loadingContainer && imageResultContainer) {
     generatedImage.src = imageUrl;
 
-    // Quando a imagem carregar, esconder loading e mostrar resultado
     generatedImage.onload = () => {
       loadingContainer.style.display = 'none';
       imageResultContainer.classList.add('active');
     };
 
-    // Se houver erro ao carregar
     generatedImage.onerror = () => {
       loadingContainer.innerHTML = `
-              <i class='bx bx-error' style='font-size: 60px; color: #ff4d4d;'></i>
-              <p class="loading-text" style="color: #ff4d4d;">Erro ao carregar a imagem</p>
-              <button class="btn-enviar" onclick="closePopup()" style="margin-top: 20px;">Fechar</button>
-          `;
+        <i class='bx bx-error' style='font-size: 60px; color: #ff4d4d;'></i>
+        <p class="loading-text" style="color: #ff4d4d;">Erro ao carregar a imagem</p>
+        <button class="btn-enviar" onclick="closePopup()" style="margin-top: 20px;">Fechar</button>
+      `;
     };
-  }, 1000); // Simula 1 segundo de carregamento
+  }
 }
 
 // Função para fechar o pop-up
@@ -329,6 +356,14 @@ function newGeneration() {
   document.getElementById('picturaForm').reset();
 }
 
+// Limpar selects de conteúdo e estilo
+const conteudoSelect = document.getElementById('conteudo');
+const estiloSelect = document.getElementById('estilo-imagem');
+
+conteudoSelect.innerHTML = '<option value="">Selecione o conteúdo...</option>';
+estiloSelect.innerHTML = '<option value="">Selecione o estilo...</option>';
+
+
 // Fechar ao clicar no overlay
 document.addEventListener('DOMContentLoaded', () => {
   const popupOverlay = document.getElementById('popupOverlay');
@@ -349,26 +384,4 @@ document.addEventListener('keydown', (e) => {
       closePopup();
     }
   }
-});
-
-// Modificar o submit do formulário para abrir o pop-up
-document.getElementById('picturaForm').addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  // Pegar valores do formulário
-  const materia = document.getElementById('opcoes-materia').value;
-  const conteudo = document.getElementById('conteudo').value;
-  const estilo = document.getElementById('estilo-imagem').value;
-  const infoAdicional = document.getElementById('info-adicional').value;
-
-  // Validação básica
-  if (!materia || !conteudo || !estilo) {
-    alert('Por favor, preencha todos os campos obrigatórios!');
-    return;
-  }
-
-  const imageUrl = 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0';
-
-  // Abrir pop-up com a imagem
-  openPopup(imageUrl, materia, conteudo, estilo);
 });

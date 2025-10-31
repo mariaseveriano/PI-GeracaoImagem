@@ -1,5 +1,4 @@
 const CONFIG = {
-    // Defina qual API você está usando
     API_EM_USO: 'huggingface',
 
     huggingface: {
@@ -102,7 +101,7 @@ async function gerarImagemAPI(materia, conteudo, estilo, infoAdicional) {
             body: JSON.stringify({
                 inputs: prompt,
                 parameters: {
-                    num_inference_steps: 4,  // FLUX é rápido
+                    num_inference_steps: 4,
                     guidance_scale: 0
                 }
             })
@@ -208,10 +207,10 @@ async function logGeneration(data) {
 
 // Quando a página carregar
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('🎨 Sistema Pictura carregado');
 
     // Substitui o submit do formulário
     const form = document.getElementById('picturaForm');
-
     if (!form) {
         console.error('❌ Formulário não encontrado! Certifique-se que o ID é "picturaForm"');
         return;
@@ -253,28 +252,48 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Gerar imagem
             const imageUrl = await gerarImagemAPI(materia, conteudo, estilo, infoAdicional);
+            console.log('✅ Imagem gerada:', imageUrl);
 
-            // Atualizar popup com a imagem
-            const generatedImage = document.getElementById('generatedImage');
-            const loadingContainer = document.getElementById('loadingContainer');
-            const imageResultContainer = document.getElementById('imageResultContainer');
+            // 3. Atualizar popup com a imagem
+            if (typeof updatePopupImage === 'function') {
+                updatePopupImage(imageUrl);
+            } else {
 
-            if (generatedImage && loadingContainer && imageResultContainer) {
-                generatedImage.src = imageUrl;
-                loadingContainer.style.display = 'none';
-                imageResultContainer.classList.add('active');
+                // Fallback: atualizar manualmente
+                const generatedImage = document.getElementById('generatedImage');
+                const loadingContainer = document.getElementById('loadingContainer');
+                const imageResultContainer = document.getElementById('imageResultContainer');
+
+                if (generatedImage && loadingContainer && imageResultContainer) {
+                    generatedImage.src = imageUrl;
+
+                    generatedImage.onload = () => {
+                        loadingContainer.style.display = 'none';
+                        imageResultContainer.classList.add('active');
+                    };
+
+                    generatedImage.onerror = () => {
+                        loadingContainer.innerHTML = `
+                            <i class='bx bx-error' style='font-size: 60px; color: #ff4d4d;'></i>
+                            <p class="loading-text" style="color: #ff4d4d;">Erro ao carregar a imagem</p>
+                            <button class="btn-enviar" onclick="closePopup()" style="margin-top: 20px;">Fechar</button>
+                        `;
+                    };
+                }
             }
 
         } catch (error) {
             console.error('💥 Erro ao gerar:', error);
 
-            // Fechar popup se existir
-            if (typeof closePopup === 'function') {
-                closePopup();
+            // Atualizar loading com erro
+            const loadingContainer = document.getElementById('loadingContainer');
+            if (loadingContainer) {
+                loadingContainer.innerHTML = `
+                    <i class='bx bx-error' style='font-size: 60px; color: #ff4d4d;'></i>
+                    <p class="loading-text" style="color: #ff4d4d;">${error.message}</p>
+                    <button class="btn-enviar" onclick="closePopup()" style="margin-top: 20px;">Fechar</button>
+                `;
             }
-
-            // Mostrar erro detalhado
-            alert(error.message);
 
         } finally {
             // Reabilitar botão
@@ -283,6 +302,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    console.log('✅ Sistema carregado! Preencha o formulário e clique em enviar.');
+    console.log('✅ Sistema pronto! Preencha o formulário e clique em enviar.');
 });
 
