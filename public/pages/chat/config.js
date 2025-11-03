@@ -2,8 +2,8 @@ const CONFIG = {
     API_EM_USO: 'huggingface',
 
     huggingface: {
-        apiKey: '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',
-        endpoint: 'https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell',
+        apiKey: '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',
+        endpoint: 'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell',
         model: 'black-forest-labs/FLUX.1-schnell'
     },
 };
