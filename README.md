@@ -56,6 +56,10 @@ João Paulo de Lima Martins - 25.00806-1
 * Permitir acesso aos dados enviados pelo cliente através de `req.body`
 * Útil para processar formulários e APIs REST
 
+### **Hugging-Face**
+
+* API para geração de imagens por meio de Inteligência Artificial
+
 ***
 
 Agradecimentos especiais ao Prof. Núncio pelo suporte exercido ao longo do projeto.
