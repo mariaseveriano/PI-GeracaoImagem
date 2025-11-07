@@ -30,15 +30,6 @@ const userSchema = new mongoose.Schema(
       enum: ['aluno', 'professor'],
       required: true
     },
-    idade: {
-      type: Number,
-      min: [0, 'Idade deve ser positiva'],
-      max: [150, 'Idade inválida']
-    },
-    telefone: {
-      type: String,
-      trim: true
-    },
     ativo: {
       type: Boolean,
       default: true

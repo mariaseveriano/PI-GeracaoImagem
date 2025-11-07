@@ -70,12 +70,13 @@ router.get('/', verificarToken, async (req, res) => {
         // Paginação
         const skip = (parseInt(page) - 1) * parseInt(limit);
 
+        // MUDANÇA: Agora retornamos o imageData também na listagem
         const historico = await History
             .find(filtro)
             .sort({ createdAt: -1 })
             .skip(skip)
-            .limit(parseInt(limit))
-            .select('-imageData'); // Não retornar imageData na listagem para economizar banda
+            .limit(parseInt(limit));
+        // Removemos o .select('-imageData') para incluir o base64
 
         const total = await History.countDocuments(filtro);
 

@@ -1,12 +1,38 @@
 const CONFIG = {
     API_EM_USO: 'huggingface',
-
     huggingface: {
-        apiKey: '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',
         endpoint: 'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell',
         model: 'black-forest-labs/FLUX.1-schnell'
     },
 };
+
+// Buscar a API key do backend
+async function buscarApiKey() {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Token não encontrado. Faça login primeiro.');
+        }
+
+        const response = await fetch('http://localhost:3000/api/config/apikey', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao buscar API key');
+        }
+
+        const data = await response.json();
+        CONFIG.huggingface.apiKey = data.apiKey;
+        console.log('✅ API key carregada com sucesso');
+        return true;
+    } catch (error) {
+        console.error('❌ Erro ao buscar API key:', error);
+        throw error;
+    }
+}
 
 function verificarConfiguracao() {
     const apiAtual = CONFIG[CONFIG.API_EM_USO];
@@ -17,8 +43,8 @@ function verificarConfiguracao() {
     }
 
     // Verifica se o token foi configurado
-    if (!apiAtual.apiKey || apiAtual.apiKey === 'SEU_TOKEN_AQUI') {
-        throw new Error('⚠️ ATENÇÃO: Você precisa colar seu token do Hugging Face no config.js!\n\nSiga os passos:\n1. Acesse: huggingface.co/settings/tokens\n2. Clique em "New token"\n3. Escolha tipo "read"\n4. Copie o token gerado\n5. Cole no lugar de "SEU_TOKEN_AQUI"');
+    if (!apiAtual.apiKey) {
+        throw new Error('⚠️ API key não carregada. Aguarde o carregamento...');
     }
 
     // Verifica formato básico
@@ -120,15 +146,21 @@ async function gerarImagemAPI(materia, conteudo, estilo, infoAdicional) {
     const startTime = Date.now();
 
     try {
-        // 1. Verificar se está configurado
+        // 1. Garantir que a API key está carregada
+        if (!CONFIG.huggingface.apiKey) {
+            console.log('🔑 Carregando API key...');
+            await buscarApiKey();
+        }
+
+        // 2. Verificar se está configurado
         verificarConfiguracao();
 
-        // 2. Criar prompt otimizado
+        // 3. Criar prompt otimizado
         const prompt = criarPrompt(materia, conteudo, estilo, infoAdicional);
         console.log('📝 Prompt enviado:', prompt);
         console.log('🔑 Usando token:', CONFIG.huggingface.apiKey.substring(0, 10) + '...');
 
-        // 3. Fazer requisição para a API
+        // 4. Fazer requisição para a API
         console.log('⏳ Enviando requisição...');
         const response = await fetch(CONFIG.huggingface.endpoint, {
             method: 'POST',
@@ -145,7 +177,7 @@ async function gerarImagemAPI(materia, conteudo, estilo, infoAdicional) {
             })
         });
 
-        // 4. Verificar resposta
+        // 5. Verificar resposta
         if (!response.ok) {
             const errorText = await response.text();
             console.error('❌ Erro da API:', response.status, errorText);
@@ -162,29 +194,31 @@ async function gerarImagemAPI(materia, conteudo, estilo, infoAdicional) {
             }
         }
 
-        // 5. Converter resposta em imagem
+        // 6. Converter resposta em imagem
         console.log('🎨 Processando imagem...');
         const blob = await response.blob();
-        const imageUrl = URL.createObjectURL(blob);
         const imageBase64 = await blobToBase64(blob);
+
+        // Criar URL temporária apenas para visualização imediata
+        const imageUrl = URL.createObjectURL(blob);
 
         const duration = Date.now() - startTime;
         console.log(`✅ Imagem gerada com sucesso em ${(duration / 1000).toFixed(2)}s!`);
 
-        // Salvar no histórico do servidor
+        // Salvar no histórico do servidor com base64 como URL principal
         await salvarNoHistorico({
             materia,
             conteudo,
             estilo,
             infoAdicional: infoAdicional || '',
             prompt,
-            imageUrl: imageUrl,
+            imageUrl: imageBase64, // Usar base64 como URL principal
             imageData: imageBase64,
             status: 'success',
             duration
         });
 
-        // 6. Registrar no log
+        // 7. Registrar no log
         await logGeneration({
             materia,
             conteudo,
@@ -270,8 +304,16 @@ async function logGeneration(data) {
 
 
 // Quando a página carregar
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     console.log('🎨 Sistema Pictura carregado');
+
+    // Carregar API key ao iniciar
+    try {
+        await buscarApiKey();
+    } catch (error) {
+        console.error('Erro ao carregar API key:', error);
+        alert('⚠️ Erro ao carregar configurações. Faça login novamente.');
+    }
 
     // Substitui o submit do formulário
     const form = document.getElementById('picturaForm');
@@ -370,4 +412,3 @@ document.addEventListener('DOMContentLoaded', function () {
 
     console.log('✅ Sistema pronto! Preencha o formulário e clique em enviar.');
 });
-

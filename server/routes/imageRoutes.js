@@ -1,16 +1,29 @@
-// server/routes/imageRoutes.js
 const express = require('express');
 const router = express.Router();
 const imageController = require('../controllers/imageController');
 const authMiddleware = require('../middleware/authMiddleware');
 
-// Criar job de geração de imagem (autenticado)
-router.post('/', authMiddleware, imageController.createJob);
+// Middleware opcional (permite uso sem autenticação, mas identifica usuário se estiver logado)
+const optionalAuth = (req, res, next) => {
+    const auth = req.headers.authorization;
+    if (!auth || !auth.startsWith('Bearer ')) {
+        return next(); // Continua sem autenticação
+    }
 
-// Consultar status do job
-router.get('/:id', authMiddleware, imageController.getJob);
+    // Tenta autenticar se token presente
+    authMiddleware(req, res, next);
+};
 
-// Servir arquivo gerado (público)
+// =============== ROTAS DE IMAGENS ===============
+
+router.post('/', optionalAuth, imageController.createJob);
+
+router.get('/', optionalAuth, imageController.listJobs);
+
+router.get('/:id', optionalAuth, imageController.getJob);
+
 router.get('/download/:filename', imageController.serveGenerated);
+
+router.delete('/:id', optionalAuth, imageController.deleteJob);
 
 module.exports = router;

@@ -1,4 +1,3 @@
-// VARIÁVEIS GLOBAIS
 let historicoAtual = [];
 let paginaAtual = 1;
 const itensPorPagina = 12;
@@ -68,14 +67,18 @@ function renderizarHistorico(itens) {
     return;
   }
 
-  container.innerHTML = itens.map((item, index) => `
+  container.innerHTML = itens.map((item, index) => {
+    // Usar imageData (base64) se disponível, senão usar imageUrl
+    const imageSrc = item.imageData || item.imageUrl || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>';
+
+    return `
     <div class="history-card" data-id="${item._id}">
       <div class="history-image-container">
         <img 
-          src="${item.imageUrl || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>'}" 
+          src="${imageSrc}" 
           alt="${item.conteudo}"
           class="history-image"
-          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22><text x=%2250%%22 y=%2250%%22>❌</text></svg>'"
+          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><rect width=%22200%22 height=%22200%22 fill=%22%23f0f0f0%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2220%22 fill=%22%23999%22>❌ Erro</text></svg>'"
         />
         ${item.status === 'error' ? '<div class="error-badge">Erro</div>' : ''}
       </div>
@@ -108,7 +111,7 @@ function renderizarHistorico(itens) {
         </button>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 // FORMATAR DATA
@@ -158,6 +161,9 @@ async function visualizarImagem(id) {
 
 // MODAL DE VISUALIZAÇÃO
 function abrirModal(item) {
+  // Usar imageData (base64) se disponível, senão usar imageUrl
+  const imageSrc = item.imageData || item.imageUrl;
+
   const modal = document.createElement('div');
   modal.className = 'modal-overlay';
   modal.innerHTML = `
@@ -166,7 +172,7 @@ function abrirModal(item) {
         <i class='bx bx-x'></i>
       </button>
       <div class="modal-body">
-        <img src="${item.imageData || item.imageUrl}" alt="${item.conteudo}" class="modal-image"/>
+        <img src="${imageSrc}" alt="${item.conteudo}" class="modal-image"/>
         <div class="modal-info">
           <h2>${item.conteudo}</h2>
           <div class="modal-details">
@@ -210,8 +216,11 @@ async function baixarImagem(id) {
 
     const { data } = await response.json();
 
+    // Usar imageData (base64) se disponível
+    const imageData = data.imageData || data.imageUrl;
+
     const link = document.createElement('a');
-    link.href = data.imageData || data.imageUrl;
+    link.href = imageData;
     link.download = `pictura-${data.conteudo}-${Date.now()}.png`;
     document.body.appendChild(link);
     link.click();

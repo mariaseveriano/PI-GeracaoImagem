@@ -600,6 +600,7 @@ body {
     padding: 32px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 16px;
     background: #e0c4ce;
 }
@@ -607,6 +608,7 @@ body {
 .menu-mobile-item {
     display: flex;
     align-items: center;
+    justify-items: center;
     gap: 16px;
     background: #d9b8c4;
     color: #fff;

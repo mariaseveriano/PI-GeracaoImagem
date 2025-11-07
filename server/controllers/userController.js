@@ -1,22 +1,27 @@
 const Users = require('../models/Users');
+const bcrypt = require('bcrypt');
 
 const userController = {
   // GET /api/users - Listar todos os usuários
   listarTodos: async (req, res) => {
     try {
-      const { ativo, page = 1, limit = 10 } = req.query;
-      
+      const { ativo, tipo, page = 1, limit = 10 } = req.query;
+
       // Filtros opcionais
       const filtro = {};
       if (ativo !== undefined) {
         filtro.ativo = ativo === 'true';
       }
+      if (tipo) {
+        filtro.tipo = tipo;
+      }
 
       // Paginação
       const skip = (parseInt(page) - 1) * parseInt(limit);
-      
+
       const users = await Users
         .find(filtro)
+        .select('-senha') // Não retornar senha
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(parseInt(limit));
@@ -31,6 +36,7 @@ const userController = {
         dados: users
       });
     } catch (error) {
+      console.error('Erro ao listar usuários:', error);
       res.status(500).json({
         sucesso: false,
         mensagem: 'Erro ao listar usuários',
@@ -44,7 +50,7 @@ const userController = {
     try {
       const { id } = req.params;
 
-      const user = await Users.findById(id);
+      const user = await Users.findById(id).select('-senha');
 
       if (!user) {
         return res.status(404).json({
@@ -67,10 +73,18 @@ const userController = {
     }
   },
 
-  // POST /api/users - Criar novo usuário
+  // POST /api/users - Criar novo usuário (NÃO USAR - Use /api/auth/register)
   criar: async (req, res) => {
     try {
-      const { nome, email, idade, telefone } = req.body;
+      const { nome, email, senha, tipo, idade, telefone } = req.body;
+
+      // Validação básica
+      if (!nome || !email || !senha) {
+        return res.status(400).json({
+          sucesso: false,
+          mensagem: 'Nome, email e senha são obrigatórios'
+        });
+      }
 
       // Verifica se email já existe
       const emailExiste = await Users.findOne({ email });
@@ -81,21 +95,30 @@ const userController = {
         });
       }
 
+      // Criptografa a senha
+      const senhaHash = await bcrypt.hash(senha, 10);
+
       const novoUsuario = new Users({
         nome,
         email,
-        idade,
-        telefone
+        senha: senhaHash,
+        tipo: tipo || 'aluno',
       });
 
       await novoUsuario.save();
 
+      // Remove senha do retorno
+      const userResponse = novoUsuario.toObject();
+      delete userResponse.senha;
+
       res.status(201).json({
         sucesso: true,
         mensagem: 'Usuário criado com sucesso',
-        dados: novoUsuario
+        dados: userResponse
       });
     } catch (error) {
+      console.error('Erro ao criar usuário:', error);
+
       // Erros de validação do Mongoose
       if (error.name === 'ValidationError') {
         const erros = Object.values(error.errors).map(err => err.message);
@@ -118,15 +141,15 @@ const userController = {
   atualizar: async (req, res) => {
     try {
       const { id } = req.params;
-      const { nome, email, idade, telefone, ativo } = req.body;
+      const { nome, email, senha, ativo, tipo } = req.body;
 
       // Verifica se está tentando mudar para um email já existente
       if (email) {
-        const emailExiste = await Users.findOne({ 
-          email, 
-          _id: { $ne: id } 
+        const emailExiste = await Users.findOne({
+          email,
+          _id: { $ne: id }
         });
-        
+
         if (emailExiste) {
           return res.status(409).json({
             sucesso: false,
@@ -135,14 +158,26 @@ const userController = {
         }
       }
 
+      // Prepara dados para atualização
+      const dadosAtualizacao = {};
+      if (nome) dadosAtualizacao.nome = nome;
+      if (email) dadosAtualizacao.email = email;
+      if (ativo !== undefined) dadosAtualizacao.ativo = ativo;
+      if (tipo) dadosAtualizacao.tipo = tipo;
+
+      // Se senha foi fornecida, criptografa
+      if (senha) {
+        dadosAtualizacao.senha = await bcrypt.hash(senha, 10);
+      }
+
       const userAtualizado = await Users.findByIdAndUpdate(
         id,
-        { nome, email, idade, telefone, ativo },
-        { 
-          new: true, // Retorna o documento atualizado
-          runValidators: true // Executa validações do schema
+        dadosAtualizacao,
+        {
+          new: true,
+          runValidators: true
         }
-      );
+      ).select('-senha');
 
       if (!userAtualizado) {
         return res.status(404).json({
@@ -157,6 +192,8 @@ const userController = {
         dados: userAtualizado
       });
     } catch (error) {
+      console.error('Erro ao atualizar usuário:', error);
+
       if (error.name === 'ValidationError') {
         const erros = Object.values(error.errors).map(err => err.message);
         return res.status(400).json({
@@ -186,7 +223,7 @@ const userController = {
     try {
       const { id } = req.params;
 
-      const userDeletado = await Users.findByIdAndDelete(id);
+      const userDeletado = await Users.findByIdAndDelete(id).select('-senha');
 
       if (!userDeletado) {
         return res.status(404).json({
@@ -201,6 +238,8 @@ const userController = {
         dados: userDeletado
       });
     } catch (error) {
+      console.error('Erro ao deletar usuário:', error);
+
       if (error.name === 'CastError') {
         return res.status(400).json({
           sucesso: false,
@@ -233,12 +272,17 @@ const userController = {
       user.ativo = !user.ativo;
       await user.save();
 
+      // Remove senha do retorno
+      const userResponse = user.toObject();
+      delete userResponse.senha;
+
       res.status(200).json({
         sucesso: true,
         mensagem: `Usuário ${user.ativo ? 'ativado' : 'desativado'} com sucesso`,
-        dados: user
+        dados: userResponse
       });
     } catch (error) {
+      console.error('Erro ao alterar status:', error);
       res.status(500).json({
         sucesso: false,
         mensagem: 'Erro ao alterar status do usuário',
@@ -253,9 +297,14 @@ const userController = {
       const total = await Users.countDocuments();
       const ativos = await Users.countDocuments({ ativo: true });
       const inativos = await Users.countDocuments({ ativo: false });
+      const professores = await Users.countDocuments({ tipo: 'professor' });
+      const alunos = await Users.countDocuments({ tipo: 'aluno' });
 
       // Média de idade (apenas usuários com idade definida)
-      const usuariosComIdade = await Users.find({ idade: { $exists: true, $ne: null } });
+      const usuariosComIdade = await Users.find({
+        idade: { $exists: true, $ne: null }
+      }).select('idade');
+
       const mediaIdade = usuariosComIdade.length > 0
         ? usuariosComIdade.reduce((acc, user) => acc + user.idade, 0) / usuariosComIdade.length
         : 0;
@@ -266,10 +315,12 @@ const userController = {
           totalUsuarios: total,
           usuariosAtivos: ativos,
           usuariosInativos: inativos,
-          mediaIdade: mediaIdade.toFixed(1)
+          professores,
+          alunos,
         }
       });
     } catch (error) {
+      console.error('Erro ao buscar estatísticas:', error);
       res.status(500).json({
         sucesso: false,
         mensagem: 'Erro ao buscar estatísticas',
@@ -281,7 +332,7 @@ const userController = {
   // GET /api/users/buscar?q=termo - Buscar usuários
   buscar: async (req, res) => {
     try {
-      const { q } = req.query;
+      const { q, tipo } = req.query;
 
       if (!q) {
         return res.status(400).json({
@@ -290,12 +341,21 @@ const userController = {
         });
       }
 
-      const users = await Users.find({
+      const filtro = {
         $or: [
           { nome: { $regex: q, $options: 'i' } },
           { email: { $regex: q, $options: 'i' } }
         ]
-      }).sort({ createdAt: -1 });
+      };
+
+      if (tipo) {
+        filtro.tipo = tipo;
+      }
+
+      const users = await Users
+        .find(filtro)
+        .select('-senha')
+        .sort({ createdAt: -1 });
 
       res.status(200).json({
         sucesso: true,
@@ -303,9 +363,67 @@ const userController = {
         dados: users
       });
     } catch (error) {
+      console.error('Erro ao buscar usuários:', error);
       res.status(500).json({
         sucesso: false,
         mensagem: 'Erro ao buscar usuários',
+        erro: error.message
+      });
+    }
+  },
+
+  // PATCH /api/users/:id/password - Alterar senha
+  alterarSenha: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { senhaAtual, novaSenha } = req.body;
+
+      if (!senhaAtual || !novaSenha) {
+        return res.status(400).json({
+          sucesso: false,
+          mensagem: 'Senha atual e nova senha são obrigatórias'
+        });
+      }
+
+      if (novaSenha.length < 6) {
+        return res.status(400).json({
+          sucesso: false,
+          mensagem: 'Nova senha deve ter no mínimo 6 caracteres'
+        });
+      }
+
+      const user = await Users.findById(id);
+
+      if (!user) {
+        return res.status(404).json({
+          sucesso: false,
+          mensagem: 'Usuário não encontrado'
+        });
+      }
+
+      // Verifica senha atual
+      const senhaValida = await bcrypt.compare(senhaAtual, user.senha);
+
+      if (!senhaValida) {
+        return res.status(401).json({
+          sucesso: false,
+          mensagem: 'Senha atual incorreta'
+        });
+      }
+
+      // Atualiza senha
+      user.senha = await bcrypt.hash(novaSenha, 10);
+      await user.save();
+
+      res.status(200).json({
+        sucesso: true,
+        mensagem: 'Senha alterada com sucesso'
+      });
+    } catch (error) {
+      console.error('Erro ao alterar senha:', error);
+      res.status(500).json({
+        sucesso: false,
+        mensagem: 'Erro ao alterar senha',
         erro: error.message
       });
     }

@@ -196,6 +196,10 @@ app.use('/api/users', userRoutes);
 const historyRoutes = require('./server/routes/historyRoutes');
 app.use('/api/history', historyRoutes);
 
+// ROTAS DE CONFIGURAÇÃO (NOVA!)
+const configRoutes = require('./server/routes/configRoutes');
+app.use('/api/config', configRoutes);
+
 // INICIAR SERVIDOR
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
@@ -204,6 +208,7 @@ app.listen(PORT, () => {
     console.log('📋 Rotas disponíveis:');
     console.log('   POST   /api/auth/register');
     console.log('   POST   /api/auth/login');
+    console.log('   GET    /api/config/apikey');
     console.log('   GET    /api/history');
     console.log('   POST   /api/history');
     console.log('   GET    /api/history/:id');
